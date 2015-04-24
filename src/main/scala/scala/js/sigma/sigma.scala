@@ -18,6 +18,10 @@ object Sigma  {
 trait Sigma extends js.Object {
   def graph:Graph=js.native
   def refresh():Unit=js.native
+  def startForceAtlas2():Unit=js.native
+  def stopForceAtlas2():Unit=js.native
+  def killForceAtlas2():Unit=js.native
+  def isForceAtlas2Running():Unit=js.native
 }
 
 trait Graph extends js.Object {
