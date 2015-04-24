@@ -16,4 +16,4 @@ libraryDependencies ++= Seq(
   "org.webjars" % "sigma.js" % "1.0.3"
   )
 
-jsDependencies +="org.webjars" % "sigma.js" % "1.0.3" / "sigma.min.js"
+jsDependencies +=  "org.webjars" % "sigma.js" % "1.0.3" / "sigma.min.js"
