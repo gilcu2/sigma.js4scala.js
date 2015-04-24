@@ -5,17 +5,18 @@ package scala.js.sigma
  */
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSName
+import js.annotation.JSName
 import org.scalajs.dom.html
 
+import js.Dynamic.{global => jsGlo, newInstance => jsNew, literal => jsLit}
 
-@JSName("sigma")
-object Sigma extends js.Object {
-  def apply(target:html.Element): Sigma = js.native
+
+object Sigma  {
+  def apply(target:html.Element): Sigma = jsNew(jsGlo.sigma)(target).asInstanceOf[Sigma]
 }
 
 trait Sigma extends js.Object {
-  def graph():Graph=js.native
+  def graph:Graph=js.native
   def refresh():Unit=js.native
 }
 
