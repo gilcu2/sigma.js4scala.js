@@ -21,7 +21,7 @@ trait Sigma extends js.Object {
   def startForceAtlas2():Unit=js.native
   def stopForceAtlas2():Unit=js.native
   def killForceAtlas2():Unit=js.native
-  def isForceAtlas2Running():Unit=js.native
+  def isForceAtlas2Running(config:js.Dynamic=jsLit(worker=true, barnesHutOptimize=false)):Unit=js.native
 }
 
 trait Graph extends js.Object {

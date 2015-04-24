@@ -16,6 +16,6 @@ libraryDependencies += "gilcu2" %%% "scala-js-sigma" % "0.1.0-SNAPSHOT"
 
 Dont forget to load "sigma.min.js" in the html
 
-See the example test.scala 
+See the examples
 
 If you want contribute make a pull request
