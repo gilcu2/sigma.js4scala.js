@@ -15,26 +15,22 @@ import scala.scalajs.js.Dynamic.{global => jsGlo, newInstance => jsNew, literal 
 class GraphSource(val s:Sigma) {
   var i=0
   var j=0
-  val g=s.graph
 
   def updateGraph(): Unit ={
     import scala.util.Random
     println("Updating graph en GraphSource: "+i)
 
-    val running=s.isForceAtlas2Running
-    if(running) s.killForceAtlas2()
     val nodeId="n"+i.toString
     val node=jsLit(id = nodeId, label =nodeId ,x = i % 7, y = i % 11, size = 1, color = "blue")
-    g.addNode(node)
+    s.addNode(node)
     if(i>0) {
       val idSrc="n"+Random.nextInt(i)
       println("idSrc: "+idSrc)
       val edge = jsLit(id = i.toString, source = idSrc, target = nodeId)
-      g.addEdge(edge)
+      s.addEdge(edge)
     }
     i+=1
-    s.refresh()
-    if(running) s.startForceAtlas2()
+
   }
 
   def repeatUpdate(): Unit ={
@@ -53,11 +49,10 @@ object Example {
 
     val s1 = Sigma(target)
 
-    s1.graph.addNode(jsLit(id = "n1", label = "Hellow", size = 1, x = 0, y = 0)).
+    s1.addNode(jsLit(id = "n1", label = "Hellow", size = 1, x = 0, y = 0)).
       addNode(jsLit(id = "n2", labe1 = "World", size = 1, x = 1, y = 1)).
       addEdge(jsLit(id = "e", source = "n1", target = "n2"))
 
-    s1.refresh()
   }
 
   @JSExport
@@ -69,8 +64,8 @@ object Example {
       println("mouseDown with: "+e.button)
       e.button match {
         case 0 => gSource.updateGraph
-        case 1=>s.startForceAtlas2()
-        case 2=>s.killForceAtlas2()
+        case 1=>s.startForce()
+        case 2=>s.stopForce()
         case _=>
       }
 

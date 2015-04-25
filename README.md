@@ -1,6 +1,6 @@
 sigma.js4scala.js
 
-Scala.js façade for sigma.js
+Scala.js view of sigma.js
 
 Use:
 

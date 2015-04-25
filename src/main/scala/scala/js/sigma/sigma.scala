@@ -4,6 +4,9 @@ package scala.js.sigma
  * Created by gil on 23/04/15.
  */
 
+import org.scalajs.dom
+
+import scala.collection.immutable.HashMap
 import scala.scalajs.js
 import js.annotation.JSName
 import org.scalajs.dom.html
@@ -12,43 +15,76 @@ import js.Dynamic.{global => jsGlo, newInstance => jsNew, literal => jsLit}
 
 
 object Sigma  {
-  def apply(target:html.Element): Sigma = jsNew(jsGlo.sigma)(target).asInstanceOf[Sigma]
+  def apply(target:html.Element): Sigma = new Sigma(target)
 }
 
-trait Sigma extends js.Object {
-  private var forceRunning=false
-  def graph:Graph=js.native
-  def refresh():Unit=js.native
+class Sigma(target:html.Element) {
 
-  private def startForceAtlas2(config:js.Dynamic=jsLit(worker=true, barnesHutOptimize=false)):Unit=js.native
-  private def stopForceAtlas2():Unit=js.native
-  private def killForceAtlas2():Unit=js.native
+  private var isRunning = false
 
-  def startForce(config:js.Dynamic=jsLit(worker=true, barnesHutOptimize=false)):Unit={
-    this.startForceAtlas2()
-    forceRunning=true
+  private val sigmaJS=SigmaJS(target)
+  private val graphJS=sigmaJS.graph
+
+  def addNode(n: js.Dynamic): Sigma = {
+    if (isRunning) sigmaJS.killForceAtlas2()
+    graphJS.addNode(n)
+    println("added node: "+n)
+    sigmaJS.refresh()
+    if (isRunning) sigmaJS.startForceAtlas2()
+    this
   }
 
-  def stopForce(): Unit ={
-    this.stopForceAtlas2()
-    forceRunning=false
+  def addEdge(e: js.Dynamic): Sigma = {
+    if (isRunning) sigmaJS.killForceAtlas2()
+    graphJS.addEdge(e)
+    println("added edge: "+e)
+    sigmaJS.refresh()
+    if (isRunning) sigmaJS.startForceAtlas2()
+    this
   }
 
-  def killForce(): Unit ={
-    this.killForceAtlas2()
-    forceRunning=false
+  def startForce(config: js.Dynamic = jsLit(worker = true, barnesHutOptimize = false)): Unit = {
+    sigmaJS.startForceAtlas2()
+    isRunning = true
   }
 
-  def isForceRunning():Boolean=forceRunning
+  def stopForce(): Unit = {
+    sigmaJS.killForceAtlas2()
+    isRunning = false
+  }
+
+
 
 }
 
-trait Graph extends js.Object {
-  private def addNode(n:js.Dynamic):Graph=js.native
-  private def addEdge(e:js.Dynamic):Graph=js.native
-  def nodes():js.Array[js.Dynamic]=js.native
-  def edges():js.Array[js.Dynamic]=js.native
+object SigmaJS  {
+  def apply(target:html.Element): SigmaJS = jsNew(jsGlo.sigma)(target).asInstanceOf[SigmaJS]
 }
+
+trait GraphJS extends js.Object {
+  def addNode(n: js.Dynamic): GraphJS = js.native
+
+  def addEdge(e: js.Dynamic): GraphJS = js.native
+
+  def nodes(): js.Array[js.Dynamic] = js.native
+
+  def edges(): js.Array[js.Dynamic] = js.native
+}
+
+trait SigmaJS extends js.Object {
+
+  def graph:GraphJS=js.native
+
+  def refresh(): Unit = js.native
+
+  def startForceAtlas2(config: js.Dynamic = jsLit(worker = true, barnesHutOptimize = false)): Unit = js.native
+
+  def killForceAtlas2(): Unit = js.native
+
+
+}
+
+
 
 
 
