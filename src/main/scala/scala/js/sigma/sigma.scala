@@ -28,23 +28,22 @@ class Sigma(target:html.Element) {
   def addNode(n: js.Dynamic): Sigma = {
     if (isRunning) sigmaJS.killForceAtlas2()
     graphJS.addNode(n)
-    println("added node: "+n)
     sigmaJS.refresh()
-    if (isRunning) sigmaJS.startForceAtlas2()
+    if (isRunning)   startForce()
     this
   }
 
   def addEdge(e: js.Dynamic): Sigma = {
     if (isRunning) sigmaJS.killForceAtlas2()
     graphJS.addEdge(e)
-    println("added edge: "+e)
     sigmaJS.refresh()
-    if (isRunning) sigmaJS.startForceAtlas2()
+    if (isRunning) startForce()
     this
   }
 
   def startForce(config: js.Dynamic = jsLit(worker = true, barnesHutOptimize = false)): Unit = {
     sigmaJS.startForceAtlas2()
+    dom.setTimeout(() => this.checkForceConvergency, 1000)
     isRunning = true
   }
 
@@ -53,34 +52,51 @@ class Sigma(target:html.Element) {
     isRunning = false
   }
 
-  def isForceRunning(): Boolean = isForceRunning
+  def isForceRunning(): Boolean = isRunning
 
-  var oldPosis=Map[String,(Int,Int)]()
+  var oldPosis=Map[String,PR2]()
   private def checkForceConvergency(): Unit = {
+
     if(! isRunning) return
 
-    val newPosis=graphJS.getNodes.map(node=>node.id.asInstanceOf[String]->(node.x.asInstanceOf[Int],node.y.asInstanceOf[Int])).toMap
+    val newPosis=graphJS.nodes.map(node=>node.id.asInstanceOf[String]->new PR2(node.x.asInstanceOf[Double],node.y.asInstanceOf[Double])).toMap
 
-    if(newPos.size != oldPos.size) {
-      oldPos=newPos
+    val newSize=newPosis.size
+    if(newSize != oldPosis.size) {
+      oldPosis=newPosis
+      dom.setTimeout(() => this.checkForceConvergency, 1000)
       return
     }
 
-    var sumDiff=0.0
-    for(i <- newPos.keys) {
-      val oldPointOpt=oldPos.get(i)
-      oldPointOpt match {
-        case Some(oldPoint)=>{
-          newPo
+
+    var sumDiff:Double=0.0
+    for(i <- newPosis.keys) {
+      val oldPosOpt=oldPosis.get(i)
+      oldPosOpt match {
+        case Some(oldPos)=>{
+          val newPos=newPosis(i)
+          sumDiff+=(newPos-oldPos).abs2
+        }
+        case _ =>{
+          oldPosis=newPosis
+          return
         }
       }
-      if(  )
     }
 
-
-    dom.setTimeout(() => this.repeatUpdate, 1000)
+    oldPosis = newPosis
+    if(sumDiff/newSize>1.0  )
+      dom.setTimeout(() => this.checkForceConvergency, 1000)
+    else
+      sigmaJS.killForceAtlas2
   }
 
+}
+
+class PR2(val x:Double,val y:Double) {
+  def - (p:PR2):PR2=new PR2(x-p.x,y-p.y)
+  def abs2():Double=x*x+y*y
+  override def toString()="("+x+","+y+")"
 }
 
 object SigmaJS  {
@@ -88,6 +104,7 @@ object SigmaJS  {
 }
 
 trait GraphJS extends js.Object {
+
   def addNode(n: js.Dynamic): GraphJS = js.native
 
   def addEdge(e: js.Dynamic): GraphJS = js.native
@@ -95,10 +112,6 @@ trait GraphJS extends js.Object {
   def nodes(): js.Array[js.Dynamic] = js.native
 
   def edges(): js.Array[js.Dynamic] = js.native
-
-  def getNodes():js.Array[js.Dynamic]=js.native
-
-  def getEdges():js.Array[js.Dynamic]=js.native
 
 }
 
