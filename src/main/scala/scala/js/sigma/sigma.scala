@@ -6,11 +6,10 @@ package scala.js.sigma
 
 import org.scalajs.dom
 
-import scala.collection.immutable.HashMap
+
 import scala.scalajs.js
 import js.annotation.JSName
 import org.scalajs.dom.html
-import js.DynamicImplicits
 import js.Dynamic.{global => jsGlo, newInstance => jsNew, literal => jsLit}
 
 
@@ -36,6 +35,22 @@ class Sigma(target:html.Element) {
   def addEdge(e: js.Dynamic): Sigma = {
     if (isRunning) sigmaJS.killForceAtlas2()
     graphJS.addEdge(e)
+    sigmaJS.refresh()
+    if (isRunning) startForce()
+    this
+  }
+
+  def rmNode(id:String): Sigma = {
+    if (isRunning) sigmaJS.killForceAtlas2()
+    graphJS.rmNode(id)
+    sigmaJS.refresh()
+    if (isRunning)   startForce()
+    this
+  }
+
+  def rmEdge(id:String): Sigma = {
+    if (isRunning) sigmaJS.killForceAtlas2()
+    graphJS.rmEdge(id)
     sigmaJS.refresh()
     if (isRunning) startForce()
     this
@@ -113,7 +128,11 @@ trait GraphJS extends js.Object {
 
   def edges(): js.Array[js.Dynamic] = js.native
 
+  @JSName("dropNode")
+  def rmNode(id:String):Unit=js.native
 
+  @JSName("dropEdge")
+  def rmEdge(id:String):Unit=js.native
 
 }
 
