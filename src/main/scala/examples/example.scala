@@ -20,8 +20,11 @@ class GraphSource(val s:Sigma) {
   def updateGraph(): Unit ={
     import scala.util.Random
     println("Updating graph en GraphSource: "+i)
+
+    val running=s.isForceAtlas2Running
+    if(running) s.killForceAtlas2()
     val nodeId="n"+i.toString
-    val node=jsLit(id = nodeId, label =nodeId ,x = i % 7, y = i % 11, size = 1, color = "yellow")
+    val node=jsLit(id = nodeId, label =nodeId ,x = i % 7, y = i % 11, size = 1, color = "blue")
     g.addNode(node)
     if(i>0) {
       val idSrc="n"+Random.nextInt(i)
@@ -31,7 +34,7 @@ class GraphSource(val s:Sigma) {
     }
     i+=1
     s.refresh()
-
+    if(running) s.startForceAtlas2()
   }
 
   def repeatUpdate(): Unit ={
@@ -60,28 +63,14 @@ object Example {
   @JSExport
   def force(target: html.Element): Unit = {
     val s = Sigma(target)
-
-
-
     val gSource=new GraphSource(s)
-    var running=false
 
     target.onmousedown=(e: dom.MouseEvent)=>{
-      println("mouse clin at"+e.button)
+      println("mouseDown with: "+e.button)
       e.button match {
-        case 0 => {
-          if(running) s.killForceAtlas2()
-          gSource.updateGraph
-          if(running) s.startForceAtlas2()
-        }
-        case 1=>if( ! running ) {
-            running=true
-            s.startForceAtlas2()
-          }
-        case 2=>if( running ) {
-          s.killForceAtlas2()
-          running=false
-        }
+        case 0 => gSource.updateGraph
+        case 1=>s.startForceAtlas2()
+        case 2=>s.killForceAtlas2()
         case _=>
       }
 
