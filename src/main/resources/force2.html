@@ -1,0 +1,54 @@
+<script src="../sigma.min.js"></script>
+<script src="../sigma.layout.forceAtlas2.min.js"></script>
+<div id="container">
+  <style>
+    #graph-container {
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      position: absolute;
+    }
+  </style>
+  <div id="graph-container"></div>
+</div>
+<script>
+    var s = new sigma('graph-container');
+
+    var node0={
+      // Main attributes:
+      "id": "n0",
+      "label": "Hello",
+      // Display attributes:
+      "x": 0,
+      "y": 0,
+      "size": 1,
+      "color": "#f00"
+    }
+
+    var node1={
+      // Main attributes:
+      "id": "n1",
+      "label": "World !",
+      // Display attributes:
+      "x": 1,
+      "y": 1,
+      "size": 1,
+      "color": "#00f"
+    }
+
+    var edge={
+      "id": "e0",
+      // Reference extremities:
+      "source": "n0",
+      "target": "n1"
+    }
+
+    // Then, let's add some data to display:
+    s["graph"]["addNode"](node0)
+    s["graph"]["addNode"](node1)
+    s["graph"]["addEdge"](edge)
+    s.refresh()
+// Start the ForceAtlas2 algorithm:
+    s.startForceAtlas2({worker: true, barnesHutOptimize: false});
+</script>

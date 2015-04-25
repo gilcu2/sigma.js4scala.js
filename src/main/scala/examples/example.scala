@@ -61,13 +61,31 @@ object Example {
   def force(target: html.Element): Unit = {
     val s = Sigma(target)
 
-    s.startForceAtlas2()
+
 
     val gSource=new GraphSource(s)
+    var running=false
 
     target.onmousedown=(e: dom.MouseEvent)=>{
       println("mouse clin at"+e.button)
-      gSource.updateGraph
+      e.button match {
+        case 0 => {
+          if(running) s.killForceAtlas2()
+          gSource.updateGraph
+          if(running) s.startForceAtlas2()
+        }
+        case 1=>if( ! running ) {
+            running=true
+            s.startForceAtlas2()
+          }
+        case 2=>if( running ) {
+          s.killForceAtlas2()
+          running=false
+        }
+        case _=>
+      }
+
+
     }
 
   }

@@ -27,6 +27,8 @@ trait Sigma extends js.Object {
 trait Graph extends js.Object {
   def addNode(n:js.Dynamic):Graph=js.native
   def addEdge(e:js.Dynamic):Graph=js.native
+  def nodes():js.Array[js.Dynamic]=js.native
+  def edges():js.Array[js.Dynamic]=js.native
 }
 
 
