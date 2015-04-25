@@ -21,7 +21,7 @@ class GraphSource(val s:Sigma) {
     println("Updating graph en GraphSource: "+i)
 
     val nodeId="n"+i.toString
-    val node=jsLit(id = nodeId, label =nodeId ,x = i % 7, y = i % 11, size = 1, color = "blue")
+    val node=jsLit(id = nodeId, label =nodeId ,x = Random.nextInt(10), y = Random.nextInt(10), size = 1, color = "blue")
     s.addNode(node)
     if(i>0) {
       val idSrc="n"+Random.nextInt(i)
@@ -59,12 +59,13 @@ object Example {
   def force(target: html.Element): Unit = {
     val s = Sigma(target)
     val gSource=new GraphSource(s)
+    s.startForce()
 
     target.onmousedown=(e: dom.MouseEvent)=>{
       println("mouseDown with: "+e.button)
       e.button match {
         case 0 => gSource.updateGraph
-        case 1=>s.startForce()
+        case 1=>/*s.startForce()*/
         case 2=>s.stopForce()
         case _=>
       }

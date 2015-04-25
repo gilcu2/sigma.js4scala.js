@@ -113,6 +113,8 @@ trait GraphJS extends js.Object {
 
   def edges(): js.Array[js.Dynamic] = js.native
 
+
+
 }
 
 trait SigmaJS extends js.Object {
