@@ -53,7 +53,33 @@ class Sigma(target:html.Element) {
     isRunning = false
   }
 
+  def isForceRunning(): Boolean = isForceRunning
 
+  var oldPosis=Map[String,(Int,Int)]()
+  private def checkForceConvergency(): Unit = {
+    if(! isRunning) return
+
+    val newPosis=graphJS.getNodes.map(node=>node.id.asInstanceOf[String]->(node.x.asInstanceOf[Int],node.y.asInstanceOf[Int])).toMap
+
+    if(newPos.size != oldPos.size) {
+      oldPos=newPos
+      return
+    }
+
+    var sumDiff=0.0
+    for(i <- newPos.keys) {
+      val oldPointOpt=oldPos.get(i)
+      oldPointOpt match {
+        case Some(oldPoint)=>{
+          newPo
+        }
+      }
+      if(  )
+    }
+
+
+    dom.setTimeout(() => this.repeatUpdate, 1000)
+  }
 
 }
 
@@ -69,6 +95,11 @@ trait GraphJS extends js.Object {
   def nodes(): js.Array[js.Dynamic] = js.native
 
   def edges(): js.Array[js.Dynamic] = js.native
+
+  def getNodes():js.Array[js.Dynamic]=js.native
+
+  def getEdges():js.Array[js.Dynamic]=js.native
+
 }
 
 trait SigmaJS extends js.Object {
