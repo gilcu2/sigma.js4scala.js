@@ -23,6 +23,7 @@ class GraphSource(val s:Sigma) {
   val idNodes=mutable.ListBuffer[String]()
   val idEdges=mutable.ListBuffer[String]()
 
+
   def updateGraph(): Unit ={
     val opt=Random.nextInt(4)
     opt match {
@@ -38,7 +39,8 @@ class GraphSource(val s:Sigma) {
     val nodeId="n"+i
     idNodes+=(nodeId)
     val nodeLabel=if(Random.nextBoolean()) nodeId else ""
-    val node=jsLit(id = nodeId, label =nodeLabel ,x = Random.nextInt(10), y = Random.nextInt(10), size=2,color = "#617db4")
+    val node=jsLit(id = nodeId, label =nodeLabel ,x = Random.nextInt(10), y = Random.nextInt(10),
+         size=Random.nextInt(3)+1,color = "#617db4")
     s.addNode(node)
     i+=1
     println("added node: "+nodeId)
@@ -46,9 +48,10 @@ class GraphSource(val s:Sigma) {
 
   def addEdge():Unit={
     println("beg add edge")
-    val idSrc=idNodes(Random.nextInt(idNodes.size))
-    val idDst=idNodes(Random.nextInt(idNodes.size))
-    val edge = jsLit(id ="e"+i ,label="e"+i, source = idSrc, target = idDst, color="#b956af")
+    val inSrc=Random.nextInt(idNodes.size)
+    var inDst=Random.nextInt(idNodes.size)
+    if(inDst==inSrc) inDst=(inDst+1)%idNodes.size
+    val edge = jsLit(id ="e"+i ,label="e"+i, source = idNodes(inSrc), target = idNodes(inDst), color="#b956af")
     s.addEdge(edge)
     idEdges+=(i.toString)
     i+=1
