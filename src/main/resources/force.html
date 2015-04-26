@@ -15,8 +15,13 @@
 </head>
 <body>
 <div id="container"></div>
-<script src="../sigma.min.js"></script>
-<script src="../sigma.layout.forceAtlas2.min.js"></script>
+
+<!-- START SIGMA IMPORTS -->
+<script src="../sigmaBuild/sigma.min.js"></script>
+<script src="../sigmaBuild/plugins/sigma.layout.forceAtlas2.min.js"></script>
+<script src="../sigmaBuild/plugins/sigma.renderers.edgeLabels.min.js"></script>
+<!-- END SIGMA IMPORTS -->
+
 <script src="../scala-js-sigma-fastopt.js"></script>
 <script>
     examples.Example().force(document.getElementById('container'));

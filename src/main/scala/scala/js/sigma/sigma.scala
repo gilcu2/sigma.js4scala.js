@@ -74,7 +74,11 @@ class Sigma(target:html.Element) {
 
     if(! isRunning) return
 
-    val newPosis=graphJS.nodes.map(node=>node.id.asInstanceOf[String]->new PR2(node.x.asInstanceOf[Double],node.y.asInstanceOf[Double])).toMap
+    val newPosis=graphJS.nodes.map(node=>node.id.asInstanceOf[String]-> {
+      //println("Node size: " + node.size.asInstanceOf[Double])
+      new PR2(node.x.asInstanceOf[Double], node.y.asInstanceOf[Double])
+    }).toMap
+
 
     val newSize=newPosis.size
     if(newSize != oldPosis.size) {
@@ -101,7 +105,7 @@ class Sigma(target:html.Element) {
 
     oldPosis = newPosis
     if(sumDiff/newSize>1.0  )
-      dom.setTimeout(() => this.checkForceConvergency, 1000)
+      dom.setTimeout(() => this.checkForceConvergency, 500)
     else
       sigmaJS.killForceAtlas2
   }
@@ -114,9 +118,6 @@ class PR2(val x:Double,val y:Double) {
   override def toString()="("+x+","+y+")"
 }
 
-object SigmaJS  {
-  def apply(target:html.Element): SigmaJS = jsNew(jsGlo.sigma)(target).asInstanceOf[SigmaJS]
-}
 
 trait GraphJS extends js.Object {
 
@@ -135,6 +136,16 @@ trait GraphJS extends js.Object {
   def rmEdge(id:String):Unit=js.native
 
 }
+
+object SigmaJS  {
+  def apply(target:html.Element): SigmaJS ={
+    val rendererConfig=jsLit(container=target,`type`="canvas")
+    val settingsConfig=jsLit(edgeLabelSize="proportional",minArrowSize=5,defaultEdgeType="curvedArrow")
+    val sigmaConfig=jsLit(renderer=rendererConfig,settings=settingsConfig,verbose="true")
+    jsNew(jsGlo.sigma)(sigmaConfig).asInstanceOf[SigmaJS]
+  }
+}
+
 
 trait SigmaJS extends js.Object {
 

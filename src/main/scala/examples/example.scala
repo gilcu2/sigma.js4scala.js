@@ -37,7 +37,8 @@ class GraphSource(val s:Sigma) {
     println("beg add node")
     val nodeId="n"+i
     idNodes+=(nodeId)
-    val node=jsLit(id = nodeId, label =nodeId ,x = Random.nextInt(10), y = Random.nextInt(10), size = 1, color = "blue")
+    val nodeLabel=if(Random.nextBoolean()) nodeId else ""
+    val node=jsLit(id = nodeId, label =nodeLabel ,x = Random.nextInt(10), y = Random.nextInt(10), size=2,color = "#617db4")
     s.addNode(node)
     i+=1
     println("added node: "+nodeId)
@@ -47,7 +48,7 @@ class GraphSource(val s:Sigma) {
     println("beg add edge")
     val idSrc=idNodes(Random.nextInt(idNodes.size))
     val idDst=idNodes(Random.nextInt(idNodes.size))
-    val edge = jsLit(id = i.toString, source = idSrc, target = idDst)
+    val edge = jsLit(id ="e"+i ,label="e"+i, source = idSrc, target = idDst, color="#b956af")
     s.addEdge(edge)
     idEdges+=(i.toString)
     i+=1
@@ -60,7 +61,11 @@ class GraphSource(val s:Sigma) {
     println("ind "+ind)
     val id=idNodes(ind)
     println("try  rm node "+id)
-    s.rmNode(id)
+    try {
+      s.rmNode(id)
+    } catch {
+      case  x: Throwable=>println("Exception removing node: "+x)
+    }
     idNodes-=(id)
     println("rm node: "+id)
   }
@@ -71,7 +76,7 @@ class GraphSource(val s:Sigma) {
     try {
       s.rmEdge(id)
     } catch {
-      case  x: Throwable=>println("Error: "+x)
+      case  x: Throwable=>println("Exception removing edge: "+x)
     }
     idEdges-=(id)
     println("rm edge: "+id)
@@ -114,8 +119,8 @@ object Example {
           gSource.repeat= ! gSource.repeat
           gSource.repeatUpdate()
         }
-        case 1=>/*s.startForce()*/
-        case 2=>s.stopForce()
+        case 2=>/*s.startForce()*/
+        case 1=>s.stopForce()
         case _=>
       }
 
