@@ -19,10 +19,18 @@ object Sigma  {
 
 class Sigma(target:html.Element) {
 
+  import scala.language.dynamics
+
   private var isRunning = false
 
   private val sigmaJS=SigmaJS(target)
   private val graphJS=sigmaJS.graph
+//
+//  def addNode(id:String,fields:(String,Any)* ):Sigma ={
+//    val n=jsLit(id=id)
+//    for((a,b)<-fields) n.a=b
+//    this
+//  }
 
   def addNode(n: js.Dynamic): Sigma = {
     if (isRunning) sigmaJS.killForceAtlas2()
@@ -51,10 +59,15 @@ class Sigma(target:html.Element) {
   def rmEdge(id:String): Sigma = {
     if (isRunning) sigmaJS.killForceAtlas2()
     graphJS.rmEdge(id)
-    sigmaJS.refresh()
     if (isRunning) startForce()
     this
   }
+
+  def getNode(id:String):js.Dynamic=graphJS.nodes(id)
+
+  def getEdge(id:String):js.Dynamic=graphJS.edges(id)
+
+  def clear():Unit=graphJS.clear()
 
   def startForce(config: js.Dynamic = jsLit(worker = true, barnesHutOptimize = false)): Unit = {
     sigmaJS.startForceAtlas2()
@@ -119,6 +132,7 @@ class PR2(val x:Double,val y:Double) {
 }
 
 
+
 trait GraphJS extends js.Object {
 
   def addNode(n: js.Dynamic): GraphJS = js.native
@@ -127,13 +141,19 @@ trait GraphJS extends js.Object {
 
   def nodes(): js.Array[js.Dynamic] = js.native
 
+  def nodes(id:String): js.Dynamic = js.native
+
   def edges(): js.Array[js.Dynamic] = js.native
+
+  def edges(id:String): js.Dynamic = js.native
 
   @JSName("dropNode")
   def rmNode(id:String):Unit=js.native
 
   @JSName("dropEdge")
   def rmEdge(id:String):Unit=js.native
+
+  def clear():Unit=js.native
 
 }
 

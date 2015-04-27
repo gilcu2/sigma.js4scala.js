@@ -2,7 +2,7 @@
  * Created by gil on 4/24/15.
  */
 
-package examples
+package scala.js.sigma
 
 import scala.collection.mutable
 import scala.js
@@ -94,14 +94,14 @@ class GraphSource(val s:Sigma) {
 }
 
 @JSExport
-object Example {
+object Examples {
 
   @JSExport
   def basic(target: html.Element): Unit = {
 
     val s1 = Sigma(target)
 
-    s1.addNode(jsLit(id = "n1", label = "Hellow", size = 1, x = 0, y = 0)).
+    s1.addNode(jsLit(id="n1", label = "Hellow", size = 1, x = 0, y = 0)).
       addNode(jsLit(id = "n2", labe1 = "World", size = 1, x = 1, y = 1)).
       addEdge(jsLit(id = "e", source = "n1", target = "n2"))
 
