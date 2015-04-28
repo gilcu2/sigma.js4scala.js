@@ -160,7 +160,8 @@ trait GraphJS extends js.Object {
 object SigmaJS  {
   def apply(target:html.Element): SigmaJS ={
     val rendererConfig=jsLit(container=target,`type`="canvas")
-    val settingsConfig=jsLit(edgeLabelSize="proportional",minArrowSize=5,defaultEdgeType="curvedArrow")
+    val settingsConfig=jsLit(edgeLabelSize="proportional",minArrowSize=5,defaultEdgeType="curvedArrow",
+      minNodeSize=1,maxNodeSize=3)
     val sigmaConfig=jsLit(renderer=rendererConfig,settings=settingsConfig,verbose="true")
     jsNew(jsGlo.sigma)(sigmaConfig).asInstanceOf[SigmaJS]
   }
