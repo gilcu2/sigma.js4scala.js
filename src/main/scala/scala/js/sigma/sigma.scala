@@ -24,6 +24,7 @@ class Sigma(target:html.Element) {
   private var isRunning = false
 
   private val sigmaJS=SigmaJS(target)
+  sigmaJS.classes.graph.addMethod("getNodeCount",thiz => thiz.nodesArray.length)
   private val graphJS=sigmaJS.graph
 //
 //  def addNode(id:String,fields:(String,Any)* ):Sigma ={
@@ -178,7 +179,19 @@ trait SigmaJS extends js.Object {
 
   def killForceAtlas2(): Unit = js.native
 
+  def classes:ClassesJS=js.native
 
+
+
+}
+
+trait ClassesJS extends js.Object {
+  def graph:GraphClassesJS=js.native
+}
+
+trait GraphClassesJS extends js.Object with GraphJS {
+  def addMethod(name:String,handler: js.ThisFunction0[GraphClassesJS,Any]):Unit=js.native
+  def getNodesCount:Int=js.native
 }
 
 
