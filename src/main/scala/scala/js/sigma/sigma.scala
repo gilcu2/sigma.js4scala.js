@@ -24,7 +24,7 @@ class Sigma(target:html.Element) {
   private var isRunning = false
 
   private val sigmaJS=SigmaJS(target)
-  sigmaJS.classes.graph.addMethod("getNodeCount",thiz => thiz.nodesArray.length)
+  //sigmaJS.classes.graph.addMethod("getNodeCount",thiz => thiz.nodesArray.length)
   private val graphJS=sigmaJS.graph
 //
 //  def addNode(id:String,fields:(String,Any)* ):Sigma ={
@@ -80,6 +80,8 @@ class Sigma(target:html.Element) {
     sigmaJS.killForceAtlas2()
     isRunning = false
   }
+
+  def getNodesCount:Int=graphJS.getNodesCount
 
   def isForceRunning(): Boolean = isRunning
 
@@ -154,6 +156,8 @@ trait GraphJS extends js.Object {
   @JSName("dropEdge")
   def rmEdge(id:String):Unit=js.native
 
+  def getNodesCount():Int=js.native
+
   def clear():Unit=js.native
 
 }
@@ -191,7 +195,7 @@ trait ClassesJS extends js.Object {
 
 trait GraphClassesJS extends js.Object with GraphJS {
   def addMethod(name:String,handler: js.ThisFunction0[GraphClassesJS,Any]):Unit=js.native
-  def getNodesCount:Int=js.native
+  //def nodesArray: js.Array[js.Dynamic]
 }
 
 

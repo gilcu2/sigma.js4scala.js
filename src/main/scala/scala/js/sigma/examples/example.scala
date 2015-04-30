@@ -131,4 +131,29 @@ object Examples {
     }
 
   }
+
+  @JSExport
+  def nodesCount(target: html.Element): Unit = {
+    val s = Sigma(target)
+    val gSource=new GraphSource(s)
+    s.startForce()
+    gSource.repeat=true
+    gSource.repeatUpdate()
+
+    target.onmousedown=(e: dom.MouseEvent)=>{
+      println("mouseDown with: "+e.button)
+      e.button match {
+        case 0 => {
+          gSource.repeat= ! gSource.repeat
+          gSource.repeatUpdate()
+        }
+        case 2=>println(s.getNodesCount)
+        case 1=>s.stopForce()
+        case _=>
+      }
+
+
+    }
+
+  }
 }
